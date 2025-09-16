@@ -4,9 +4,9 @@
 
 и на мой взгляд язык OCaml отлично подходит для этих целей. 
 
-> OCaml does a great job
+> "OCaml does a great job
 of clarifying and simplifying the essence of functional programming in a way that other languages that blend functional
-and imperative programming (like Scala) or take functional programming to the extreme (like Haskell) do not.
+and imperative programming (like Scala) or take functional programming to the extreme (like Haskell) do not." ["OCaml Programming: Correct + Efficient + Beautiful" - глава 3.3]
 
 ### какие плюсы OCaml'a я для себя выделила в процессе выбора языка:
   * __Несложность__ *(в сравнении с, например, lisp-подобными языками)* __синтаксиса__ позволяет сфокусироваться на самой сути фукционального подхода, а не на количестве незакрытых скобок в выражении;
@@ -43,4 +43,5 @@ and imperative programming (like Scala) or take functional programming to the ex
 
 ### автор эссе:
 #### с уважением, Пименова Екатерина, P3313 🐫 
+
 
