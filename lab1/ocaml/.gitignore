@@ -1,0 +1,33 @@
+# === OCaml / Dune build artifacts ===
+_build/                 # основная папка, куда Dune складывает всё собранное
+*.install               # установочные метаданные dune
+*.merlin                # служебный файл для редакторов (OCaml Platform, Merlin)
+*.cmi
+*.cmo
+*.cmx
+*.cma
+*.cmxa
+*.a
+*.o
+*.annot
+*.cmt
+*.cmti
+
+# === Opam files ===
+.opam/                  # локальное окружение opam (если инициализировано в проекте)
+*.opam.locked           # lock-файлы, если не нужны в репозитории (по ситуации)
+
+# === VSCode / Editor ===
+.vscode/                # настройки редактора
+*.swp                   # временные файлы vim
+*.swo
+.DS_Store               # маковская мусорка
+.idea/                  # JetBrains / OCaml plugin
+*.log                   # логи (если будут)
+
+# === Tests / Coverage (если добавишь позже) ===
+_coverage/
+*.coverage
+
+# === Generated executables ===
+*.exe
