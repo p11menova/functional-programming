@@ -8,6 +8,9 @@ fun getCertainDigitsFib(targetDigits: Int): Long {
     var a = BigInteger.ONE;
     var b = BigInteger.ONE;
     var n: Long = 2;
+    if (targetDigits == 1) {
+        return 1;
+    }
     while (b <= limit) {
         n++;
         val tmp = a;

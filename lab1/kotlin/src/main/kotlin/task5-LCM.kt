@@ -14,7 +14,7 @@ fun gcd(x: Int, y: Int): Int {
 }
 
 fun lcm(x: Int, y: Int): Int {
-    return x * y / gcd(x, y);
+    return x / gcd(x, y) * y;
 }
 
 fun lcmFromOneToTarget(a: Int): Int {
