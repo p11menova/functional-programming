@@ -44,6 +44,7 @@ bin/
 build
 # === OCaml / Dune build artifacts ===
 lab1/ocaml/_build/                 # основная папка, куда Dune складывает всё собранное
+ocaml/_build/
 *.install               # установочные метаданные dune
 *.merlin                # служебный файл для редакторов (OCaml Platform, Merlin)
 *.cmi
