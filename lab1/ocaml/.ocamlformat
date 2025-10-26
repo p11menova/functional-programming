@@ -1,0 +1,8 @@
+profile = ocamlformat
+break-cases = nested
+margin = 100
+wrap-comments = true
+line-endings = lf
+
+version = ignore
+version-check = false

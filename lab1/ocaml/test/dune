@@ -1,2 +1,5 @@
 (test
- (name test_ocaml))
+(name test_task5)
+(modules test_task5)
+(libraries task5 alcotest)
+)

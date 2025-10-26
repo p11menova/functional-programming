@@ -1,2 +1,5 @@
 (library
- (name ocaml))
+(name task5)
+(public_name ocaml)
+(modules task5)
+)
