@@ -27,6 +27,7 @@ backend/gradle
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+!**/ocaml/bin/
 
 ### NetBeans ###
 /nbproject/private/
