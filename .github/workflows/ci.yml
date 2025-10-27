@@ -25,7 +25,8 @@ jobs:
           opam update
           opam install --yes dune ocamlformat alcotest
 
-      - name: Check formatting (no changes)
+      - name: Check formatting
+        working-directory: lab1/ocaml
         run: |
           eval "$(opam env)"
           ocamlformat --version
