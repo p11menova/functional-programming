@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup OCaml & opam
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml: '4.14.0'
+          opam: '2.1.0'
+
+      - name: install dependencies
+        run: |
+          eval "$(opam env)"
+          opam update
+          opam install --yes dune ocamlformat alcotest
+
+      - name: check formatting with ocamlformat
+        run: |
+          eval "$(opam env)"
+          # format all .ml/.mli files in-place
+          find . -type f \( -name '*.ml' -o -name '*.mli' \) -print0 | xargs -0 --no-run-if-empty ocamlformat --enable-outside-detected-project -i
+          # if formatting changed files -> fail CI
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Files are not properly formatted. Run ocamlformat locally and commit the changes."
+            git --no-pager status --porcelain
+            exit 1
+          fi
+
+      - name: build
+        run: |
+          eval "$(opam env)"
+          dune build --profile dev
+
+      - name: test
+        run: |
+          eval "$(opam env)"
+          dune runtest --no-buffer
