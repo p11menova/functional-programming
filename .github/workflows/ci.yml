@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,17 +25,11 @@ jobs:
           opam update
           opam install --yes dune ocamlformat alcotest
 
-      - name: check formatting with ocamlformat
+      - name: Check formatting (no changes)
         run: |
           eval "$(opam env)"
-          # format all .ml/.mli files in-place
-          find . -type f \( -name '*.ml' -o -name '*.mli' \) -print0 | xargs -0 --no-run-if-empty ocamlformat --enable-outside-detected-project -i
-          # if formatting changed files -> fail CI
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Files are not properly formatted. Run ocamlformat locally and commit the changes."
-            git --no-pager status --porcelain
-            exit 1
-          fi
+          ocamlformat --version
+          git ls-files '*.ml' '*.mli' | xargs -r ocamlformat --enable-outside-detected-project --check
 
       - name: build
         run: |
