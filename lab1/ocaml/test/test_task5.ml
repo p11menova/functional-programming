@@ -16,9 +16,15 @@ let test_lcm_range_tail_rec () =
   check int "LCM(1..1)=1" 1 (Task5.lcm_from_one_to_target_tail_rec 1) ;
   check int "LCM(1..20)=232792560" 232792560 (Task5.lcm_from_one_to_target_tail_rec 20)
 
+let test_lcm_range_rec () =
+  check int "LCM(1..10)=2520" 2520 (Task5.lcm_from_one_to_target_rec 10) ;
+  check int "LCM(1..2)=2" 2 (Task5.lcm_from_one_to_target_rec 2) ;
+  check int "LCM(1..20)=232792560" 232792560 (Task5.lcm_from_one_to_target_rec 20)
+
 let () =
   let open Alcotest in
   run "task5"
     [ ("gcd", [test_case "basic gcd" `Quick test_gcd])
     ; ("lcm", [test_case "basic lcm" `Quick test_lcm])
-    ; ("lcm_range", [test_case "lcm(1..n) - tail recursion" `Quick test_lcm_range_tail_rec]) ]
+    ; ("lcm_range_tail_rec", [test_case "lcm(1..n) - tail recursion" `Quick test_lcm_range_tail_rec])
+    ; ("lcm_range_rec", [test_case "lcm(1..n) - recursion" `Quick test_lcm_range_rec]) ]

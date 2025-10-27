@@ -9,4 +9,6 @@ let lcm_from_one_to_target_tail_rec n =
   let rec aux i acc = if i > n then acc else aux (i + 1) (lcm acc i) in
   aux 1 1
 
-let () = Printf.printf "LCM(1..10) = %d\n" (lcm_from_one_to_target_tail_rec 10)
+(* рекурсия *)
+let rec lcm_from_one_to_target_rec n =
+  if n = 1 then 1 else lcm n (lcm_from_one_to_target_rec (n - 1))
