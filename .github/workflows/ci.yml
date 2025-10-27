@@ -17,7 +17,8 @@ jobs:
         uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: "4.14.0"
-          opam-depext: false
+          cache: true
+          dune-cache: true
 
       - name: install dependencies
         run: |
