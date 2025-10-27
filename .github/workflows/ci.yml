@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ocaml/opam:ubuntu-22.04-ocaml-4.14
-      options: --user 1000:1000
     env:
       DUNE_CACHE: enabled
       DUNE_CACHE_STORAGE_MODE: copy
