@@ -17,6 +17,7 @@ jobs:
         uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: "4.14.0"
+          opam-depext: false
 
       - name: install dependencies
         run: |
