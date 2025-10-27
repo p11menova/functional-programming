@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ["**"]
   pull_request:
-    branches: [ "**" ]
+    branches: ["**"]
 
 jobs:
   build-and-test:
@@ -16,8 +16,7 @@ jobs:
       - name: Setup OCaml & opam
         uses: ocaml/setup-ocaml@v2
         with:
-          ocaml: '4.14.0'
-          opam: '2.1.0'
+          ocaml-compiler: "4.14.0"
 
       - name: install dependencies
         run: |
