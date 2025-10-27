@@ -34,11 +34,13 @@ jobs:
           git ls-files '*.ml' '*.mli' | xargs -r ocamlformat --enable-outside-detected-project --check
 
       - name: build
+        working-directory: lab1/ocaml
         run: |
           eval "$(opam env)"
           dune build --profile dev
 
       - name: test
+        working-directory: lab1/ocaml
         run: |
           eval "$(opam env)"
           dune runtest --no-buffer
