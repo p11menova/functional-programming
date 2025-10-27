@@ -2,45 +2,63 @@ name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: ["*"]
   pull_request:
-    branches: ["**"]
+    branches: ["*"]
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: ocaml/opam:ubuntu-22.04-ocaml-4.14
+      options: --user 1000:1000
+    env:
+      DUNE_CACHE: enabled
+      DUNE_CACHE_STORAGE_MODE: copy
+    defaults:
+      run:
+        shell: bash
+        working-directory: lab1/ocaml
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup OCaml & opam
-        uses: ocaml/setup-ocaml@v2
+      - name: Cache opam root
+        uses: actions/cache@v4
         with:
-          ocaml-compiler: "4.14.0"
-          cache: true
-          dune-cache: true
+          path: /home/opam/.opam
+          key: opam-4.14-${{ hashFiles('**/*.opam') }}
+          restore-keys: |
+            opam-4.14-
 
-      - name: install dependencies
+      - name: Cache dune
+        uses: actions/cache@v4
+        with:
+          path: |
+            /home/opam/.cache/dune
+            lab1/ocaml/_build
+          key: dune-${{ hashFiles('lab1/ocaml/dune-project', 'lab1/ocaml/**/dune') }}
+          restore-keys: |
+            dune-
+
+      - name: Show toolchain
         run: |
-          eval "$(opam env)"
+          opam switch show
+          ocaml -version
+
+      - name: Install dependencies
+        run: |
           opam update
-          opam install --yes dune ocamlformat alcotest
+          opam install -y dune alcotest ocamlformat
 
       - name: Check formatting
-        working-directory: lab1/ocaml
         run: |
-          eval "$(opam env)"
           ocamlformat --version
           git ls-files '*.ml' '*.mli' | xargs -r ocamlformat --enable-outside-detected-project --check
 
-      - name: build
-        working-directory: lab1/ocaml
-        run: |
-          eval "$(opam env)"
-          dune build --profile dev
+      - name: Build
+        run: dune build
 
-      - name: test
-        working-directory: lab1/ocaml
-        run: |
-          eval "$(opam env)"
-          dune runtest --no-buffer
+      - name: Test
+        run: dune runtest --no-buffer
