@@ -1,8 +1,8 @@
 profile = ocamlformat
 break-cases = all
-margin = 150
+margin = 100
 wrap-comments = true
-line-endings = lf
+line-endings = crlf
 
 version = ignore
 version-check = false

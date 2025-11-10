@@ -1,8 +1,11 @@
 open Utils
+
 (* генерация последовательности *)
 (* range n is_reversed *)
+(* List.init length fun = [fun 0; fun 1; ... ; fun length]*)
+
 let range n = function
-  | true -> List.init n (fun i -> n - i) (* List.init length fun = [fun 0; fun 1; ... ; fun length]*)
+  | true -> List.init n (fun i -> n - i)
   | false -> List.init n succ
 
 (* свертка *)

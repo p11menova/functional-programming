@@ -1,5 +1,5 @@
 (library
 (name lab1)
 (public_name ocaml)
-(modules task5_recursion task5_fold utils)
+(modules task5_recursion task5_fold task5_map utils)
 )

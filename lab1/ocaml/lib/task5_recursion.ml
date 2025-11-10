@@ -2,7 +2,8 @@ open Utils
 
 (* хвостовая рекурсия *)
 let lcm_from_one_to_target_tail_rec n =
-  (* aux - вспомогательная внутр. функция ; aux (i - текущий элемент, acc - накопленное значение - НОК(1..i-1)) *)
+  (* aux - вспомогательная внутр. функция ; aux (i - текущий элемент, acc - накопленное значение -
+     НОК(1..i-1)) *)
   let rec aux i acc =
     match i with
     | x when x > n -> acc
@@ -16,4 +17,3 @@ let rec lcm_from_one_to_target_rec = function
   | n -> lcm n (lcm_from_one_to_target_rec (n - 1))
 
 (* let range n = Seq.(1 -- n |> List.of_seq) я хотела так но у меня не поддерживается оператор -- *)
-
