@@ -22,14 +22,14 @@ let test_lcm_range_rec () =
   check int "LCM(1..20)=232792560" 232792560 (Lab1.Task5_recursion.lcm_from_one_to_target_rec 20)
 
 let test_lcm_range_fold () =
-  check int "LCM(1..10)=2520" 2520 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_left 10) ;
-  check int "LCM(1..2)=2" 2 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_left 2) ;
-  check int "LCM(1..20)=232792560" 232792560 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_left 20) ;
-  check int "LCM(1..1)=1" 1 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_left 1) ;
-  check int "LCM(1..10)=2520" 2520 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_right 10) ;
-  check int "LCM(1..2)=2" 2 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_right 2) ;
-  check int "LCM(1..20)=232792560" 232792560 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_right 20) ;
-  check int "LCM(1..1)=1" 1 (Lab1.Task5_recursion.lcm_from_one_to_target_fold_right 1)
+  check int "LCM(1..10)=2520" 2520 (Lab1.Task5_fold.lcm_from_one_to_target_fold_left 10) ;
+  check int "LCM(1..2)=2" 2 (Lab1.Task5_fold.lcm_from_one_to_target_fold_left 2) ;
+  check int "LCM(1..20)=232792560" 232792560 (Lab1.Task5_fold.lcm_from_one_to_target_fold_left 20) ;
+  check int "LCM(1..1)=1" 1 (Lab1.Task5_fold.lcm_from_one_to_target_fold_left 1) ;
+  check int "LCM(1..10)=2520" 2520 (Lab1.Task5_fold.lcm_from_one_to_target_fold_right 10) ;
+  check int "LCM(1..2)=2" 2 (Lab1.Task5_fold.lcm_from_one_to_target_fold_right 2) ;
+  check int "LCM(1..20)=232792560" 232792560 (Lab1.Task5_fold.lcm_from_one_to_target_fold_right 20) ;
+  check int "LCM(1..1)=1" 1 (Lab1.Task5_fold.lcm_from_one_to_target_fold_right 1)
 
 let () =
   let open Alcotest in
