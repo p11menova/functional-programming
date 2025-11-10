@@ -8,6 +8,8 @@ let range n = function
   | true -> List.init n (fun i -> n - i)
   | false -> List.init n succ
 
+(* let range n = Seq.(1 -- n |> List.of_seq) я хотела так но у меня не поддерживается оператор -- *)
+
 (* свертка *)
 (* List.fold_right: [a; b; c] -> f a (f b (f c init))
 

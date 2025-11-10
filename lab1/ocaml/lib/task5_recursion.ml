@@ -15,5 +15,3 @@ let lcm_from_one_to_target_tail_rec n =
 let rec lcm_from_one_to_target_rec = function
   | 1 -> 1
   | n -> lcm n (lcm_from_one_to_target_rec (n - 1))
-
-(* let range n = Seq.(1 -- n |> List.of_seq) я хотела так но у меня не поддерживается оператор -- *)
