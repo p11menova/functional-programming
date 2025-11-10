@@ -1,10 +1,10 @@
 (executable
  (public_name main)
  (name main)
- (libraries task5))
+ (libraries lab1))
 
 (executable
 (name task5_tail_recursion)
 (public_name task5_tail_recursion)
 (modules task5_tail_recursion)
-(libraries task5))
+(libraries lab1))

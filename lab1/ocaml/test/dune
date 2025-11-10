@@ -1,5 +1,5 @@
 (test
 (name test_task5)
 (modules test_task5)
-(libraries task5 alcotest)
+(libraries lab1 alcotest)
 )

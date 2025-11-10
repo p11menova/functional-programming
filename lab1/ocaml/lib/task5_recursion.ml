@@ -1,9 +1,4 @@
-let rec gcd a b =
-  match b with
-  | 0 -> a
-  | _ -> gcd b (a mod b)
-
-let lcm a b = a / gcd a b * b
+open Utils
 
 (* хвостовая рекурсия *)
 let lcm_from_one_to_target_tail_rec n =
