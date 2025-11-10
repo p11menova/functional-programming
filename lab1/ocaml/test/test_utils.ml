@@ -19,7 +19,8 @@ let test_has_exact_num_digits () =
   check bool "100 has 3 digits = true" true (has_exact_num_digits (pow_int 100 1) 3) ;
   check bool "10^1000 has 1000 = true" true (has_exact_num_digits (pow_int 10 1000) 1000) ;
   check bool "10^999 has 1000 digits = true" true (has_exact_num_digits (pow_int 10 999) 1000) ;
-  check bool "10^999 - 1 has 1000 digits = false" false (has_exact_num_digits (Z.sub (pow_int 10 999) Z.one) 1000)
+  check bool "10^999 - 1 has 1000 digits = false" false
+    (has_exact_num_digits (Z.sub (pow_int 10 999) Z.one) 1000)
 
 let () =
   let open Alcotest in
