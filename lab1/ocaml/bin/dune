@@ -3,8 +3,3 @@
  (name main)
  (libraries lab1))
 
-(executable
-(name task5_tail_recursion)
-(public_name task5_tail_recursion)
-(modules task5_tail_recursion)
-(libraries lab1))
