@@ -1,6 +1,6 @@
 profile = ocamlformat
-break-cases = nested
-margin = 100
+break-cases = all
+margin = 150
 wrap-comments = true
 line-endings = lf
 
