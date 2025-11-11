@@ -24,7 +24,7 @@ jobs:
         run: |
           eval "$(opam env)"
           opam update
-          opam install --yes dune ocamlformat alcotest
+          opam install --yes dune ocamlformat alcotest zarith
 
       - name: Check formatting
         working-directory: lab1/ocaml
