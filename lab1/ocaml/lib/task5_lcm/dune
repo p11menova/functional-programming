@@ -1,0 +1,3 @@
+(library 
+ (name task5_lcm)
+ (modules utils task5_recursion task5_fold task5_map task5_lazy))

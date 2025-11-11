@@ -1,15 +1,15 @@
 (test
 (name test_task5)
 (modules test_task5)
-(libraries lab1 alcotest)
+(libraries task5_lcm alcotest)
 )
 (test
 (name test_utils)
 (modules test_utils)
-(libraries lab1 alcotest)
+(libraries  task5_lcm task25_fib alcotest)
 )
 (test
 (name test_task25)
 (modules test_task25)
-(libraries lab1 alcotest)
+(libraries task25_fib alcotest)
 )

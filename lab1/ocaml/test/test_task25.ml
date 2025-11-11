@@ -1,6 +1,6 @@
 open Alcotest
-open Lab1.Task25_recursion
-open Lab1.Task25_mix
+open Task25_fib.Task25_recursion
+open Task25_fib.Task25_mix
 
 let test_fib_exact_digits_tail_recursion () =
   check int "1 digit -> index 1" 1 (fib_exact_digits_tail_recursion 1) ;

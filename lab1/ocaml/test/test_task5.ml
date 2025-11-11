@@ -1,8 +1,8 @@
 open Alcotest
-open Lab1.Task5_map
-open Lab1.Task5_recursion
-open Lab1.Task5_fold
-open Lab1.Task5_lazy
+open Task5_lcm.Task5_map
+open Task5_lcm.Task5_recursion
+open Task5_lcm.Task5_fold
+open Task5_lcm.Task5_lazy
 
 let test_lcm_range_tail_rec () =
   check int "LCM(1..10)=2520" 2520 (lcm_from_one_to_target_tail_rec 10) ;

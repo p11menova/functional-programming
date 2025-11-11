@@ -1,8 +1,4 @@
 (library
-(name lab1)
-(public_name ocaml)
-(libraries zarith)
-(modules task5_recursion task5_fold task5_map task5_lazy 
-utils
-task25_recursion task25_mix)
+ (name lab1)
+ (public_name ocaml)
 )

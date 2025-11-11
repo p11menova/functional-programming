@@ -1,0 +1,4 @@
+(library
+ (name task25_fib)
+ (libraries zarith)
+ (modules utils task25_recursion task25_mix))

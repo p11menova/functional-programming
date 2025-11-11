@@ -1,4 +1,5 @@
-open Lab1.Utils
+open Task5_lcm.Utils
+open Task25_fib.Utils
 open Alcotest
 
 let test_gcd () =
