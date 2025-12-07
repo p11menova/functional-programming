@@ -1,0 +1,33 @@
+# Dune build directory
+_build/
+
+# opam local switch
+_opam/
+
+# Merlin (OCaml IDE support)
+.merlin
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Byte-compiled files
+*.byte
+*.native
+*.cmo
+*.cmi
+*.cma
+*.cmx
+*.cmxa
+*.cmxs
+*.o
+*.a
+
+# Generated opam files (если генерируются автоматически)
+# *.opam
