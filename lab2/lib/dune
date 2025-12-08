@@ -1,2 +1,4 @@
 (library
- (name lab2))
+ (name lab2)
+ (public_name lab2)
+ (modules rb_bag rb_bag_utils rb_bag_initialization))
