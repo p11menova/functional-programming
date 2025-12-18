@@ -62,7 +62,7 @@ let is_tree_valid t =
 (** красивая печать дерева в ASCII-арт формате *)
 let pp fmt_to_string ppf tree =
   let rec print_node indent is_last side_label = function
-    | Leaf -> 
+    | Leaf ->
       let prefix = if is_last then "└── " else "├── " in
       Format.fprintf ppf "%s%s%s(Leaf)\n" indent prefix side_label
     | Node { color; value = (v, count); left; right } ->
@@ -73,8 +73,8 @@ let pp fmt_to_string ppf tree =
       in
       let value_str = fmt_to_string v in
       let prefix = if is_last then "└── " else "├── " in
-      Format.fprintf ppf "%s%s%s[%s] (%s, cnt=%d)\n" indent prefix side_label color_str
-        value_str count;
+      Format.fprintf ppf "%s%s%s[%s] (%s, cnt=%d)\n" indent prefix side_label
+        color_str value_str count;
       let new_indent = indent ^ if is_last then "    " else "│   " in
       ( match (left, right) with
       | (Leaf, Leaf) -> ()
