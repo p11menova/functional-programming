@@ -1,2 +1,7 @@
 (test
- (name test_lab2))
+ (name test_lab2)
+ (libraries lab2 alcotest))
+
+(test
+ (name test_properties)
+ (libraries lab2 qcheck))

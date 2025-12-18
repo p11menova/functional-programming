@@ -28,4 +28,3 @@ parens-tuple-patterns = always
 single-case = compact
 type-decl = sparse
 wrap-fun-args = true
-
