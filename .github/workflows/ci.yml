@@ -24,23 +24,43 @@ jobs:
         run: |
           eval "$(opam env)"
           opam update
-          opam install --yes dune ocamlformat alcotest zarith
+          opam install --yes dune ocamlformat alcotest zarith qcheck qcheck-alcotest 
 
-      - name: Check formatting
+      - name: Check formatting lab1
         working-directory: lab1/ocaml
         run: |
           eval "$(opam env)"
           ocamlformat --version
           git ls-files '*.ml' '*.mli' | xargs -r ocamlformat --enable-outside-detected-project --check
 
-      - name: build
+      - name: build lab1
         working-directory: lab1/ocaml
         run: |
           eval "$(opam env)"
           dune build --profile dev
 
-      - name: test
+      - name: test lab1
         working-directory: lab1/ocaml
         run: |
           eval "$(opam env)"
           dune runtest --no-buffer
+
+      - name: Check formatting lab2
+        working-directory: lab2
+        run: |
+          eval "$(opam env)"
+          ocamlformat --version
+          git ls-files '*.ml' '*.mli' | xargs -r ocamlformat --enable-outside-detected-project --check
+
+      - name: build lab2
+        working-directory: lab2
+        run: |
+          eval "$(opam env)"
+          dune build --profile dev
+
+      - name: test lab2
+        working-directory: lab2
+        run: |
+          eval "$(opam env)"
+          dune runtest --no-buffer
+    

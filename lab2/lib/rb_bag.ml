@@ -30,13 +30,73 @@ let contains x tree =
   in
   aux x tree
 
-(** Балансировка дерева после вставки элемента. Обрабатывает случаи нарушения
+(** балансировка дерева после вставки элемента. обрабатывает случаи нарушения
     инвариантов Red-Black Tree:
     - если дядя красный: перекрашиваем узлы
     - если дядя черный: выполняем повороты *)
 let balance_after_insertion tree =
   match tree with
-  (* 1. left-left - левый ребенок левого ребенка красный *)
+  (* 0. красный дядя слева - перекрашиваем *)
+  | Node
+      {
+        color = Black;
+        value = g;
+        left =
+          Node
+            {
+              color = Red;
+              value = p;
+              left = Node { color = Red; value = x; left = a; right = b };
+              right = c;
+            };
+        right = Node { color = Red; value = u; left = d; right = e };
+      } ->
+    (* перекрашиваем: родитель и дядя становятся черными, дедушка красным *)
+    Node
+      {
+        color = Red;
+        value = g;
+        left =
+          Node
+            {
+              color = Black;
+              value = p;
+              left = Node { color = Red; value = x; left = a; right = b };
+              right = c;
+            };
+        right = Node { color = Black; value = u; left = d; right = e };
+      }
+  (* красный дядя справа - перекрашиваем *)
+  | Node
+      {
+        color = Black;
+        value = g;
+        left = Node { color = Red; value = u; left = d; right = e };
+        right =
+          Node
+            {
+              color = Red;
+              value = p;
+              left = c;
+              right = Node { color = Red; value = x; left = a; right = b };
+            };
+      } ->
+    (* перекрашиваем: родитель и дядя становятся черными, дедушка красным *)
+    Node
+      {
+        color = Red;
+        value = g;
+        left = Node { color = Black; value = u; left = d; right = e };
+        right =
+          Node
+            {
+              color = Black;
+              value = p;
+              left = c;
+              right = Node { color = Red; value = x; left = a; right = b };
+            };
+      }
+  (* 1. left-left - левый ребенок левого ребенка красный (дядя черный) *)
   | Node
       {
         color = Black;
@@ -82,7 +142,7 @@ let balance_after_insertion tree =
         left = Node { color = Black; value = x; left = a; right = b };
         right = Node { color = Black; value = g; left = c; right = d };
       }
-  (* случай 3: right-right - правый ребенок правого ребенка красный *)
+  (* 3. right-right - правый ребенок правого ребенка красный (дядя черный) *)
   | Node
       {
         color = Black;
@@ -151,7 +211,6 @@ let add x tree =
       balance_after_insertion
         (Node { color; value = (v, count); left; right = insert right })
   in
-  (* после вставки корень всегда должен быть черным *)
   let result = insert tree in
   match result with
   | Leaf -> Leaf

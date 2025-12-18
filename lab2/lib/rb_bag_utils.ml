@@ -61,8 +61,10 @@ let is_tree_valid t =
 
 (** красивая печать дерева в ASCII-арт формате *)
 let pp fmt_to_string ppf tree =
-  let rec print_node indent is_last = function
-    | Leaf -> Format.fprintf ppf "%s└── (Leaf)\n" indent
+  let rec print_node indent is_last side_label = function
+    | Leaf -> 
+      let prefix = if is_last then "└── " else "├── " in
+      Format.fprintf ppf "%s%s%s(Leaf)\n" indent prefix side_label
     | Node { color; value = (v, count); left; right } ->
       let color_str =
         match color with
@@ -71,22 +73,35 @@ let pp fmt_to_string ppf tree =
       in
       let value_str = fmt_to_string v in
       let prefix = if is_last then "└── " else "├── " in
-      Format.fprintf ppf "%s%s[%s] (%s, cnt=%d)\n" indent prefix color_str
+      Format.fprintf ppf "%s%s%s[%s] (%s, cnt=%d)\n" indent prefix side_label color_str
         value_str count;
       let new_indent = indent ^ if is_last then "    " else "│   " in
       ( match (left, right) with
       | (Leaf, Leaf) -> ()
-      | (Leaf, right) -> print_node new_indent true right
-      | (left, Leaf) -> print_node new_indent true left
+      | (Leaf, right) -> print_node new_indent true "right: " right
+      | (left, Leaf) -> print_node new_indent true "left: " left
       | (left, right) ->
-        print_node new_indent false left;
-        print_node new_indent true right )
+        print_node new_indent false "left: " left;
+        print_node new_indent true "right: " right )
   in
   match tree with
   | Leaf -> Format.fprintf ppf "(empty tree)\n"
-  | Node _ as node ->
-    Format.fprintf ppf "RB-Tree:\n";
-    print_node "" true node
+  | Node { color; value = (v, count); left; right } ->
+    let color_str =
+      match color with
+      | Red -> "red"
+      | Black -> "black"
+    in
+    let value_str = fmt_to_string v in
+    Format.fprintf ppf "[%s] (%s, cnt=%d)\n" color_str value_str count;
+    let indent = "    " in
+    ( match (left, right) with
+    | (Leaf, Leaf) -> ()
+    | (Leaf, right) -> print_node indent true "right: " right
+    | (left, Leaf) -> print_node indent true "left: " left
+    | (left, right) ->
+      print_node indent false "left: " left;
+      print_node indent true "right: " right )
 
 (** преобразование дерева в строку *)
 let to_string fmt_to_string tree = Format.asprintf "%a" (pp fmt_to_string) tree
