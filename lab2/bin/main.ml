@@ -12,9 +12,11 @@ let show_adding_elements () =
         Printf.printf "%s\n" (to_string string_of_int new_tree);
 
         new_tree )
-      empty elements
+      empty
+      elements
   in
   ()
+
 
 let show_removing_elements () =
   Printf.printf "removing red leaf without rotation:\n";
@@ -31,13 +33,10 @@ let show_removing_elements () =
 
   Printf.printf "removing node with two children (needs min-right successor):\n";
   let tree3 = of_list [ 20; 10; 30; 5; 15; 25; 35; 22; 28 ] in
-  Printf.printf "before remove 20 (root with two children):\n%s\n"
-    (to_string string_of_int tree3);
+  Printf.printf "before remove 20 (root with two children):\n%s\n" (to_string string_of_int tree3);
   let tree3_after = remove 20 tree3 in
-  Printf.printf "after remove 20 (min-right successor 22):\n%s\n"
-    (to_string string_of_int tree3_after);
+  Printf.printf "after remove 20 (min-right successor 22):\n%s\n" (to_string string_of_int tree3_after);
   ()
 
-let () =
-  show_adding_elements ();
-  show_removing_elements ()
+
+let () = show_adding_elements (); show_removing_elements ()

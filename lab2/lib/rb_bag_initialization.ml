@@ -7,9 +7,8 @@ type color =
 type 'a rb_node =
   | Leaf
   | Node of {
-      color : color;
-      value : 'a * int;
-          (** in case i implement multiset, i save value + its count*)
-      left : 'a rb_node;
-      right : 'a rb_node;
+        color : color
+      ; value : 'a * int  (** in case i implement multiset, i save value + its count*)
+      ; left : 'a rb_node
+      ; right : 'a rb_node
     }

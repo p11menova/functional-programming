@@ -8,7 +8,7 @@
 
 ### структура красно-черного мульти-сета
 в файле [`rb_bag_initialization.ml`](lib/rb_bag_initialization.ml) представлена сама модель узлов моего дерева:
- 
+ ``` ocaml
     type color =
     | Red
     | Black
@@ -21,10 +21,12 @@
       left : 'a rb_node;
       right : 'a rb_node;
      }
-
+```
 вот. 
 
 красно-черное дерево - один из видов самобалансирующегося дерева, которое после любого изменения своей структуры остается валидно. валидность красно-черного дерева = выполнение всех инвариантов. их всего четыре и функции для их проверки представлены в файле [`rb_bag_utils.ml`](lib/rb_bag_utils.ml):
+
+``` ocaml
 
     (* methods for checking all RBT invariants *)
 
@@ -72,18 +74,19 @@
 
     let is_tree_valid t =
     check_root_is_black t && check_no_red_red t && check_black_height t
-
+```
 если по русски:
 
 1. каждый его узел либо красный, либо черный
 2. его корень всегда черный
 3. в дереве нет двух подряд идущих (назходящихся в отношении ребенок-родитель) красных узлов
-4. количество черных узлов на пути к любому узлу одинаково. это величина называется **черной высотой** 
+4. количество черных узлов на пути к любому листу одинаково. это величина называется **черной высотой** 
 
 ### публичное api
 
 по условию лаборатной работы необходимо было реализовать интерфейс публичного апи моей структуры и вот же он в файле [`rb_bag.mli`](lib/rb_bag.mli)
 
+``` ocaml
     open Rb_bag_initialization
 
     type 'a t = 'a rb_node
@@ -130,7 +133,7 @@
 
     val all : ('a -> bool) -> 'a t -> bool
     val any : ('a -> bool) -> 'a t -> bool
-
+```
 в целом тут комментарии излишни, кроме напоминания, что разработанная структура должна быть моноидом.
 
 **моноид** - математическая структура, состоящая из:
@@ -144,7 +147,12 @@
 
 а, и кстати два дерева эквивалетны, если у них одинаковый набор элементов + у этих элементов одинаковые частоты. поскольку красно-черное дерево может иметь разную структуру, зависящую от порядка вставки элементов. например:
 
-![tree1.png](readme-resources/tree1.jpg) ![tree2.png](readme-resources/tree2.jpg)
+<table>
+<tr>
+<td><img src="readme-resources/tree1.jpg" alt="tree1.png" width="400"></td>
+<td><img src="readme-resources/tree2.jpg" alt="tree2.png" width="400"></td>
+</tr>
+</table>
 
 в моей реализации такие деревья равны.
 
@@ -210,7 +218,7 @@
 у добавляемого узла 1 дядя 10 черный -> происходит перекрашивание и поворот. и родитель 1 5 становится корнем поддерева.
 
 код балансировки после вставки:
-
+``` ocaml
     (** балансировка дерева после вставки элемента. обрабатывает случаи нарушения
         инвариантов Red-Black Tree:
         - если дядя красный: перекрашиваем узлы
@@ -370,9 +378,10 @@
             right = Node { color = Black; value = g; left = c; right = d };
         }
     | t -> t
+```
 
 функция вставки:
-
+``` ocaml
 
     (** добавление элемента в мультисет. если элемент уже есть -> счетчик + 1. иначе
         -> вставляем новый узел + балансируем дерево *)
@@ -399,7 +408,7 @@
     match result with
     | Leaf -> Leaf
     | Node n -> Node { n with color = Black }
-
+```
 ### удаление из дерева
 
 ох, тут вообще все значительно тяжелее в отличие от вставки (есть 12 случаев удаления узла из КЧД). все их я расписывать не буду, но вот невероятная [статья](https://habr.com/ru/articles/573502/) с хабра, по которой я это изучала.
@@ -474,12 +483,70 @@ removing node with two children (needs min-right successor):
 
 а вот тут мы уже находим **преемника**. (для 20 это 22) и ставим его на место удаляемого элемента.
 
+### операции высшего порядка
+
+я реализовала левую и правую свертки, фильтрацию и map
+вот они:
+
+``` ocaml
+let rec fold_left f acc = function
+  | Leaf -> acc
+  | Node { left; value = (elem, count); right; _ } ->
+    let acc' = fold_left f acc left in
+    let acc'' = List.fold_left f acc' (List.init count (Fun.const elem)) in
+    fold_left f acc'' right
+
+(* обход справа налево*)
+let rec fold_right f = function
+  | Leaf -> fun acc -> acc
+  | Node { left; value = (elem, count); right; _ } ->
+    fun acc ->
+      let acc' = fold_right f right acc in
+      let acc'' = List.fold_right f (List.init count (Fun.const elem)) acc' in
+      fold_right f left acc''
+
+(** если элемент не проходит фильтр -> узел полностью удаляется иначе -> узел
+    остается, но рекурсивно фильтруются поддеревья *)
+let rec filter predicate = function
+  | Leaf -> Leaf
+  | Node { color; value = (elem, count); left; right } ->
+    (* рекурсивно фильтруем левое и правое поддеревья *)
+    let filtered_left = filter predicate left in
+    let filtered_right = filter predicate right in
+    if predicate elem then
+      (* элемент проходит фильтр -> создаем новый узел с отфильтрованными
+         детьми *)
+      Node
+        {
+          color;
+          value = (elem, count);
+          left = filtered_left;
+          right = filtered_right;
+        }
+    else
+      (* элемент не проходит фильтр -> удаляем узел и объединяем поддеревья *)
+      (* объединяем отфильтрованные поддеревья через union *)
+      union filtered_left filtered_right
+
+(** применение функции к каждому элементу мультисета. после применения функции
+    порядок элементов может измениться, поэтому перестраиваем дерево через
+    fold_left + add *)
+let map f bag =
+  (* обходим дерево и применяем функцию к каждому элементу (с учетом кратности),
+     затем перестраиваем дерево из результатов *)
+  fold_left
+    (fun acc x ->
+      (* применяем функцию к элементу и добавляем в новое дерево *)
+      add (f x) acc )
+    empty bag
+```
 
 ### тестирование
 
 #### unit-tests - Alcotest
 
 [`test_lab2.ml`](test/test_lab2.ml):
+``` ocaml
 
     open Lab2
 
@@ -697,7 +764,7 @@ removing node with two children (needs min-right successor):
         (Rb_bag.any (fun x -> x > 5) bag);
     let empty_any = Rb_bag.any (fun _ -> true) Rb_bag.empty in
     Alcotest.(check bool) "any on empty returns false" false empty_any
-
+``` 
 базовые юнит-тесты
 
 #### property-based testing - QCheck
@@ -705,6 +772,7 @@ removing node with two children (needs min-right successor):
 в комментариях тестов подробно описаны свойства, которыми обладает мое дерево. тестирование проводится с использованием генератора списка целых чисел из которого методов of_list создается дерево
 
 [`test_properties.ml`](test/test_properties.ml):
+``` ocaml
 
     open Lab2
     open Rb_bag
@@ -882,8 +950,7 @@ removing node with two children (needs min-right successor):
             балансировки *)
         prop_tree_valid_after_map;
         ]
-
-
+```
 
 мне очень нравятся PBT они очень умные и добрые
 
