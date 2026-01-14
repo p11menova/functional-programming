@@ -63,4 +63,23 @@ jobs:
         run: |
           eval "$(opam env)"
           dune runtest --no-buffer
+
+      - name: Check formatting lab3
+        working-directory: lab3
+        run: |
+          eval "$(opam env)"
+          ocamlformat --version
+          git ls-files '*.ml' '*.mli' | xargs -r ocamlformat --enable-outside-detected-project --check
+
+      - name: build lab3
+        working-directory: lab3
+        run: |
+          eval "$(opam env)"
+          dune build --profile dev
+
+      - name: test lab3
+        working-directory: lab3
+        run: |
+          eval "$(opam env)"
+          dune runtest --no-buffer
     
