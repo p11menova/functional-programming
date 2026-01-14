@@ -4,15 +4,15 @@ module Stream = Lab3.Stream
 module Interpolation = Lab3.Interpolation
 
 let process_point (config : Args.config) window point algorithm_name interpolate_func is_linear =
+  let was_full = Window.is_full window in
   let new_window = Window.add_point window point in
   let points = Window.get_points new_window in
   let n_points = List.length points in
+  let is_full_now = Window.is_full new_window in
 
   match Window.get_x_range new_window with
   | None -> (new_window, [])
   | Some (x_min, x_max) ->
-      (* дляя линейной : генерируем точки в последнем сегменте *)
-      (* для лагранда: генерируем одну точку в центре, если окно заполнено *)
       let target_xs =
         if is_linear && n_points >= 2 then
           let sorted = List.sort (fun (x1, _) (x2, _) -> compare x1 x2) points in
@@ -24,8 +24,11 @@ let process_point (config : Args.config) window point algorithm_name interpolate
               if is_first_segment then
                 Stream.generate_points x1 x2 step
               else
-                let start = x1 +. step in
-                if start <= x2 then Stream.generate_points start x2 step else [ x2 ]
+                let start =
+                  let k = ceil ((x1 +. 0.0001) /. step) in
+                  k *. step
+                in
+                if start <= x2 && start > x1 then Stream.generate_points start x2 step else []
           | (None, Some n) ->
               if is_first_segment then
                 Stream.generate_n_points x1 x2 n
@@ -33,12 +36,60 @@ let process_point (config : Args.config) window point algorithm_name interpolate
                 let step = (x2 -. x1) /. float_of_int (n + 1) in
                 List.init n (fun i -> x1 +. (float_of_int (i + 1) *. step))
           | (None, None) -> if is_first_segment then [ x1; x2 ] else [ x2 ]
-        else if (not is_linear) && Window.is_full new_window then
-          let center_x = (x_min +. x_max) /. 2.0 in
-          [ center_x ]
-        else if (not is_linear) && n_points >= config.window_size then
-          let center_x = (x_min +. x_max) /. 2.0 in
-          [ center_x ]
+        else if (not is_linear) && is_full_now then
+          match
+            (config.step, config.n_points)
+          with
+          | (Some step, _) ->
+              if not was_full then
+                Stream.generate_points x_min x_max step
+              else
+                let prev_points = Window.get_points window in
+                let prev_x_max =
+                  match prev_points with
+                  | [] -> x_min
+                  | _ ->
+                      let prev_sorted = List.sort (fun (x1, _) (x2, _) -> compare x1 x2) prev_points in
+                      fst (List.hd (List.rev prev_sorted))
+                in
+                let start =
+                  if x_min > prev_x_max then
+                    let k = ceil ((x_min +. 0.0001) /. step) in
+                    k *. step
+                  else
+                    let k = ceil ((prev_x_max +. 0.0001) /. step) in
+                    k *. step
+                in
+                if start <= x_max && start >= x_min then
+                  Stream.generate_points start x_max step
+                else
+                  []
+          | (None, Some n) ->
+              if not was_full then
+                Stream.generate_n_points x_min x_max n
+              else
+                let prev_points = Window.get_points window in
+                let prev_x_max =
+                  match prev_points with
+                  | [] -> x_min
+                  | _ ->
+                      let prev_sorted = List.sort (fun (x1, _) (x2, _) -> compare x1 x2) prev_points in
+                      fst (List.hd (List.rev prev_sorted))
+                in
+                let step = (x_max -. x_min) /. float_of_int (n - 1) in
+                let start =
+                  let k = ceil ((prev_x_max +. 0.0001) /. step) in
+                  k *. step
+                in
+                if start <= x_max && start > prev_x_max then
+                  Stream.generate_points start x_max step
+                else
+                  []
+          | (None, None) ->
+              if not was_full then
+                [ x_max ]
+              else
+                []
         else
           []
       in
@@ -106,12 +157,13 @@ let process_stream (config : Args.config) =
             match Window.get_x_range window with
             | None -> ()
             | Some (x_min, x_max) ->
-                (* Для линейной интерполяции при EOF не генерируем точки, так как все сегменты уже обработаны *)
                 let target_xs =
                   match alg with
-                  | Args.Linear -> []
+                  | Args.Linear ->
+                      ( match config.step with
+                      | Some _step -> if x_max >= x_min then [ x_max ] else []
+                      | None -> [ x_max ] )
                   | Args.Lagrange ->
-                      (* Для Лагранжа генерируем точки для последнего окна *)
                       ( match (config.step, config.n_points) with
                       | (Some step, _) -> Stream.generate_points x_min x_max step
                       | (None, Some n) -> Stream.generate_n_points x_min x_max n

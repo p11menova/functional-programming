@@ -29,7 +29,7 @@ let format_point algorithm_name (x, y) = Printf.sprintf "%s: %.4f %.4f" algorith
 (** генератор точек для интерполяции на основе шага *)
 let generate_points x_min x_max step =
   let rec gen acc current =
-    if current > x_max then
+    if current > x_max +. 0.0001 then
       List.rev acc
     else
       gen (current :: acc) (current +. step)

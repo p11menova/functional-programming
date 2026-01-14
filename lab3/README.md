@@ -117,27 +117,39 @@ let linear_interpolation points x =
 **интерполяция Лагранжа**
 
 ```ocaml
+
 let lagrange_interpolation points x =
-  let sorted_points = List.sort (fun (x1, _) (x2, _) -> compare x1 x2) points in
-  
-  let result = ref 0.0 in
-  
-  List.iteri
-    (fun i (xi, yi) ->
-      (* вычисляем L_i(x) = Π(j≠i) (x - x_j) / (x_i - x_j) *)
-      let li = ref 1.0 in
-      List.iteri
-        (fun j (xj, _) ->
-          if i <> j then (
-            let denominator = xi -. xj in
-            if denominator <> 0.0 then
-              li := !li *. ((x -. xj) /. denominator)))
-        sorted_points;
-      (* добавляем y_i * L_i(x) к результату *)
-      result := !result +. (yi *. !li))
-    sorted_points;
-  
-  Some !result
+  let n = List.length points in
+  if n = 0 then
+    None
+  else if n = 1 then
+    Some (snd (List.hd points))
+  else
+    let sorted_points = List.sort (fun (x1, _) (x2, _) -> compare x1 x2) points in
+
+    let result =
+      List.fold_left
+        (fun acc (xi, yi) ->
+          let li =
+            List.fold_left
+              (fun acc_li (xj, _) ->
+                if xi <> xj then
+                  let denominator = xi -. xj in
+                  if denominator <> 0.0 then
+                    acc_li *. ((x -. xj) /. denominator)
+                  else
+                    acc_li
+                else
+                  acc_li )
+              1.0
+              sorted_points
+          in
+          acc +. (yi *. li) )
+        0.0
+        sorted_points
+    in
+
+    Some result
 ```
 
 **описание:**

@@ -21,7 +21,7 @@ let add_point window point =
   let sorted_points = List.sort (fun (x1, _) (x2, _) -> compare x1 x2) new_points in
   let trimmed_points =
     if List.length sorted_points > window.max_size then
-      take window.max_size sorted_points
+      List.rev (take window.max_size (List.rev sorted_points))
     else
       sorted_points
   in
